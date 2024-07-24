@@ -1,0 +1,21 @@
+name: Release
+on:
+  push:
+    tags:
+      - "**"
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Install Dependencies
+        run: bun install
+      - name: Build Release
+        run: bun release
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/index.js
+          make_latest: "true"
