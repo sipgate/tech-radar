@@ -5,9 +5,48 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Tech Radar</title>
         <link rel="stylesheet" href="radar.css" />
-        <script src="index.js"></script>
     </head>
     <body>
         <svg id="radar"></svg>
+        <script type="module">
+            import {
+                fetchConfig,
+                fetchTechnologies,
+                renderRadarInElement,
+                stopRenderingRadarInElement,
+            } from "./index.js";
+
+            window.addEventListener("load", async () => {
+                const body = document.getElementsByTagName("body")[0];
+
+                const currentTheme = () => {
+                    return window.matchMedia("(prefers-color-scheme: dark)")
+                        .matches
+                        ? "dark"
+                        : "light";
+                };
+
+                const renderRadar = async () => {
+                    const config = await fetchConfig();
+                    const technologies = await fetchTechnologies();
+                    renderRadarInElement(
+                        "radar",
+                        config,
+                        technologies,
+                        1,
+                        currentTheme(),
+                    );
+                };
+
+                window
+                    .matchMedia("(prefers-color-scheme: dark)")
+                    .addEventListener("change", async () => {
+                        stopRenderingRadarInElement();
+                        renderRadar();
+                    });
+
+                renderRadar();
+            });
+        </script>
     </body>
 </html>

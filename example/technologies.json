@@ -1,0 +1,32 @@
+{
+  "entries": [
+    {
+      "quadrant": 0,
+      "ring": 0,
+      "label": "JavaScript",
+      "active": true,
+      "moved": 0
+    },
+    {
+      "quadrant": 1,
+      "ring": 0,
+      "label": "bun.sh",
+      "active": true,
+      "moved": 0
+    },
+    {
+      "quadrant": 2,
+      "ring": 0,
+      "label": "D3.js",
+      "active": true,
+      "moved": 0
+    },
+    {
+      "quadrant": 3,
+      "ring": 0,
+      "label": "GitHub Actions",
+      "active": true,
+      "moved": 0
+    }
+  ]
+}

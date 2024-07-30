@@ -3,20 +3,7 @@ import {
   removeRadarVisualization,
 } from "./radar_visualization.js";
 
-window
-  .matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", async () => {
-    const config = await fetchConfig();
-    removeRadarVisualization(config);
-    renderRadar(config);
-  });
-
-window.addEventListener("load", async () => {
-  const config = await fetchConfig();
-  renderRadar(config);
-});
-
-const fetchConfig = async () => {
+export const fetchConfig = async () => {
   try {
     const config = await fetch("./config.json");
     return config.json();
@@ -26,25 +13,33 @@ const fetchConfig = async () => {
   }
 };
 
-const renderRadar = async (config) => {
+export const fetchTechnologies = async () => {
+  try {
+    const config = await fetch("./technologies.json");
+    return config.json();
+  } catch (error) {
+    console.error("Error fetching technologies.json", error);
+    return {};
+  }
+};
+
+export const stopRenderingRadarInElement = (element) => {
+  const identifier = element || "radar";
+  removeRadarVisualization(identifier);
+};
+
+export const renderRadarInElement = (
+  identifier,
+  config,
+  technologies,
+  scale,
+  theme,
+) => {
   drawRadarVisualization({
-    repo_url: "https://github.com/zalando/tech-radar",
-    title: "Zalando Tech Radar",
-    date: config.date,
-    quadrants: [
-      { name: "Languages" },
-      { name: "Infrastructure" },
-      { name: "Datastores" },
-      { name: "Data Management" },
-    ],
-    rings: [
-      { name: "ADOPT", color: "#5ba300" },
-      { name: "TRIAL", color: "#009eb0" },
-      { name: "ASSESS", color: "#c7ba00" },
-      { name: "HOLD", color: "#e09b96" },
-    ],
-    entries: config.entries,
-    colors: config.colors,
-    print_ring_descriptions_table: true,
+    svg_id: identifier || config.svg_id || "radar",
+    ...config,
+    ...technologies,
+    scale: scale || config.scale || 1,
+    theme: theme || config.theme || "light",
   });
 };

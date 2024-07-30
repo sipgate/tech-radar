@@ -1,12 +1,8 @@
 import * as d3 from "d3v4";
 
-const checkIsDarkSchemePreferred = () =>
-  window.matchMedia("(prefers-color-scheme:dark)").matches;
-
 const drawRadarVisualization = (config) => {
-  storedConfig = config;
-
-  config.svg_id = config.svg || "radar";
+  config.theme = config.theme || "light";
+  config.svg_id = config.svg_id || "radar";
   config.width = config.width || 1450;
   config.height = config.height || 1000;
   config.colors =
@@ -316,7 +312,7 @@ const drawRadarVisualization = (config) => {
       .style("font-family", config.font_family)
       .style("font-size", "30")
       .style("font-weight", "bold")
-      .style("fill", checkIsDarkSchemePreferred() ? "#fff" : "#000");
+      .style("fill", config.theme === "dark" ? "#fff" : "#000");
     // date
     radar
       .append("text")
@@ -324,7 +320,7 @@ const drawRadarVisualization = (config) => {
       .text(config.date || "")
       .style("font-family", config.font_family)
       .style("font-size", "14")
-      .style("fill", checkIsDarkSchemePreferred() ? "#777" : "#999");
+      .style("fill", config.theme === "dark" ? "#777" : "#999");
 
     // footer
     radar
@@ -334,7 +330,7 @@ const drawRadarVisualization = (config) => {
       .attr("xml:space", "preserve")
       .style("font-family", config.font_family)
       .style("font-size", "12px")
-      .style("fill", checkIsDarkSchemePreferred() ? "#fff" : "#000");
+      .style("fill", config.theme === "dark" ? "#fff" : "#000");
 
     // legend
     var legend = radar.append("g");
@@ -349,7 +345,7 @@ const drawRadarVisualization = (config) => {
         .style("font-family", config.font_family)
         .style("font-size", "18px")
         .style("font-weight", "bold")
-        .style("fill", checkIsDarkSchemePreferred() ? "#fff" : "#000");
+        .style("fill", config.theme === "dark" ? "#fff" : "#000");
       for (var ring = 0; ring < 4; ring++) {
         legend
           .append("text")
@@ -375,7 +371,7 @@ const drawRadarVisualization = (config) => {
           .attr("transform", function (d, i) {
             return legend_transform(quadrant, ring, i);
           })
-          .attr("fill", checkIsDarkSchemePreferred() ? "#fff" : "#000")
+          .attr("fill", config.theme === "dark" ? "#fff" : "#000")
           .attr("class", "legend" + quadrant + ring)
           .attr("id", function (d, i) {
             return "legendItem" + d.id;
@@ -447,21 +443,15 @@ const drawRadarVisualization = (config) => {
     var legendItem = document.getElementById("legendItem" + d.id);
     legendItem.setAttribute(
       "filter",
-      checkIsDarkSchemePreferred() ? "url(#solidDark)" : "url(#solidLight)",
+      config.theme === "dark" ? "url(#solidDark)" : "url(#solidLight)",
     );
-    legendItem.setAttribute(
-      "fill",
-      checkIsDarkSchemePreferred() ? "#000" : "#fff",
-    );
+    legendItem.setAttribute("fill", config.theme === "dark" ? "#000" : "#fff");
   }
 
   function unhighlightLegendItem(d) {
     var legendItem = document.getElementById("legendItem" + d.id);
     legendItem.removeAttribute("filter");
-    legendItem.setAttribute(
-      "fill",
-      checkIsDarkSchemePreferred() ? "#fff" : "#000",
-    );
+    legendItem.setAttribute("fill", config.theme === "dark" ? "#fff" : "#000");
   }
 
   // draw blips on radar
@@ -549,8 +539,8 @@ const drawRadarVisualization = (config) => {
     .on("tick", ticked);
 };
 
-const removeRadarVisualization = (config) => {
-  var svg = d3.select("svg#" + config.svg_id);
+const removeRadarVisualization = (identifier) => {
+  var svg = d3.select("svg#" + identifier);
   svg.selectAll("*").remove();
 };
 
